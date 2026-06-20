@@ -1,0 +1,32 @@
+name: deploy commerce-crm 🛒💛
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch: # permite correrlo a mano desde la pestaña Actions
+
+jobs:
+    deploy:
+        name: pull · build · pm2
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: install ssh key
+              run: |
+                  install -m 600 -D /dev/null ~/.ssh/id_rsa
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+                  ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+            # Node/npm/pm2 viven en nvm; una shell SSH no-interactiva NO las trae en el
+            # PATH (el .bashrc que carga nvm se salta en shells no-interactivas), así que
+            # cargamos nvm explícitamente. Primer deploy: clona si no existe y arranca pm2
+            # si aún no corre; deploys siguientes: pull + build + restart. La cadena con &&
+            # aborta si algo falla (no reinicia con un build roto, sin downtime). El curl
+            # final verifica que la app responde en :3100 (si no, el Action falla en rojo).
+            - name: deploy on droplet
+              run: |
+                  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use node >/dev/null && { [ -d ~/code/commerce-crm ] || git clone git@github.com:Moibe/commerce-crm.git ~/code/commerce-crm; } && cd ~/code/commerce-crm && git checkout main && git pull origin main && npm ci && npm run build && export PORT=3100 HOST=127.0.0.1 ORIGIN=https://targetvox.com && { pm2 describe commerce-crm >/dev/null 2>&1 && pm2 restart commerce-crm --update-env || pm2 start build/index.js --name commerce-crm --update-env; } && pm2 save && sleep 2 && curl -fsS -o /dev/null -w "local http=%{http_code}\n" http://127.0.0.1:3100/'
+
+            - name: cleanup
+              run: rm -rf ~/.ssh
