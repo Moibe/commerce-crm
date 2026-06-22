@@ -52,6 +52,9 @@ export const actions: Actions = {
 
 	logout: async ({ cookies, url }) => {
 		cookies.delete(ADMIN_COOKIE, { path: '/' });
-		redirect(303, destino(url.searchParams.get('redirectTo')));
+		// Tras salir, ir a la página principal pública (apex), no al login del admin.
+		// Calcula el apex quitando el prefijo "admin." del host (conserva puerto en dev).
+		const apexHost = url.host.replace(/^admin\./, '');
+		redirect(303, `${url.protocol}//${apexHost}/`);
 	}
 };

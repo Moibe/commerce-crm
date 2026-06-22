@@ -1,12 +1,8 @@
-<script lang="ts">
-	import { enhance } from '$app/forms';
-</script>
-
 <!-- Sección de administración — en blanco por ahora. Aquí irá el panel de
      inventario / ecommerce cuando lo armes. El acceso ya está protegido por la
      sesión de admin (cookie validada en hooks.server.ts). -->
 <section class="admin">
-	<form method="POST" action="/acceso?/logout&redirectTo=/acceso" use:enhance class="logout">
+	<form method="POST" action="/acceso?/logout" class="logout">
 		<button type="submit">Salir</button>
 	</form>
 </section>
