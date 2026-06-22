@@ -26,8 +26,25 @@
   onmousemove={handleMove}
   onmouseleave={handleLeave}
 >
+  <a class="nav-icon" href="https://targetvox.com/" aria-label="Inicio" title="Ir a la página principal">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+      <path d="M9 22V12h6v10" />
+    </svg>
+  </a>
+
   <a
-    class="admin-link"
+    class="nav-icon admin-link"
     href="https://admin.targetvox.com/"
     aria-label="Administración"
     title="Administración"
@@ -76,9 +93,8 @@
     z-index: 9;
   }
 
-  /* Ícono de administración, alineado a la derecha del navbar. */
-  .admin-link {
-    margin-left: auto;
+  /* Íconos del navbar (Home a la izquierda, Admin a la derecha). */
+  .nav-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -90,12 +106,17 @@
     transition: background 0.18s ease, border-color 0.18s ease;
   }
 
-  .admin-link:hover {
+  .nav-icon:hover {
     background: rgba(45, 50, 119, 0.08);
     border-color: rgba(45, 50, 119, 0.2);
   }
 
-  .admin-link:active {
+  .nav-icon:active {
     background: rgba(45, 50, 119, 0.14);
+  }
+
+  /* Empuja el ícono de admin al extremo derecho del navbar. */
+  .admin-link {
+    margin-left: auto;
   }
 </style>
