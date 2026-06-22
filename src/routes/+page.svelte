@@ -97,7 +97,7 @@
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(260px, 300px));
-		justify-content: center;
+		justify-content: start;
 		gap: 1.4rem;
 	}
 
