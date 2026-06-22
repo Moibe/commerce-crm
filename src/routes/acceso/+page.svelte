@@ -11,6 +11,18 @@
 		<p class="hint">Esta sección es solo para el administrador de commerce-crm.</p>
 
 		<form method="POST" action="?/login&redirectTo={encodeURIComponent(data.redirectTo)}" use:enhance>
+			<!-- Campo de usuario oculto (fijo "admin"): satisface a los password managers y
+			     al warning de Chrome sobre forms de password sin username. El server lo ignora. -->
+			<input
+				class="sr-username"
+				type="text"
+				name="username"
+				value="admin"
+				autocomplete="username"
+				tabindex="-1"
+				aria-hidden="true"
+				readonly
+			/>
 			<!-- svelte-ignore a11y_autofocus: página dedicada a un solo input; enfocarlo es la acción esperada -->
 			<input
 				type="password"
@@ -92,6 +104,17 @@
 		outline: none;
 		border-color: rgba(45, 50, 119, 0.6);
 		box-shadow: 0 0 0 2px rgba(45, 50, 119, 0.22);
+	}
+
+	.sr-username {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0 0 0 0);
+		border: 0;
 	}
 
 	.enter-btn {

@@ -21,12 +21,13 @@ jobs:
             # Node/npm/pm2 viven en nvm; una shell SSH no-interactiva NO las trae en el
             # PATH (el .bashrc que carga nvm se salta en shells no-interactivas), así que
             # cargamos nvm explícitamente. Primer deploy: clona si no existe y arranca pm2
-            # si aún no corre; deploys siguientes: pull + build + restart. La cadena con &&
+            # si aún no corre. Cada deploy hace delete+start para arrancar con env LIMPIO (pm2
+            # --update-env no elimina vars viejas; un restart heredaría ORIGIN). La cadena con &&
             # aborta si algo falla (no reinicia con un build roto, sin downtime). El curl
             # final verifica que la app responde en :3100 (si no, el Action falla en rojo).
             - name: deploy on droplet
               run: |
-                  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use node >/dev/null && { [ -d ~/code/commerce-crm ] || git clone git@github.com:Moibe/commerce-crm.git ~/code/commerce-crm; } && cd ~/code/commerce-crm && git checkout main && git pull origin main && npm ci && npm run build && { [ -f .env ] && set -a && . ./.env && set +a || true; } && unset ORIGIN && export PORT="${PORT:-3100}" HOST="${HOST:-127.0.0.1}" PROTOCOL_HEADER=x-forwarded-proto HOST_HEADER=host && { pm2 describe commerce-crm >/dev/null 2>&1 && pm2 restart commerce-crm --update-env || pm2 start build/index.js --name commerce-crm --update-env; } && pm2 save && sleep 2 && curl -fsS -o /dev/null -w "local http=%{http_code}\n" http://127.0.0.1:3100/'
+                  ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} 'export NVM_DIR="$HOME/.nvm" && . "$NVM_DIR/nvm.sh" && nvm use node >/dev/null && { [ -d ~/code/commerce-crm ] || git clone git@github.com:Moibe/commerce-crm.git ~/code/commerce-crm; } && cd ~/code/commerce-crm && git checkout main && git pull origin main && npm ci && npm run build && { [ -f .env ] && set -a && . ./.env && set +a || true; } && unset ORIGIN && export PORT="${PORT:-3100}" HOST="${HOST:-127.0.0.1}" PROTOCOL_HEADER=x-forwarded-proto HOST_HEADER=host && { pm2 delete commerce-crm >/dev/null 2>&1 || true; } && pm2 start build/index.js --name commerce-crm --update-env && pm2 save && sleep 2 && curl -fsS -o /dev/null -w "local http=%{http_code}\n" http://127.0.0.1:3100/'
 
             - name: cleanup
               run: rm -rf ~/.ssh
