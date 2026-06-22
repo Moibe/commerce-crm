@@ -8,6 +8,11 @@ node_modules
 /.svelte-kit
 /build
 
+# SQLite — la base vive en el droplet, no se commitea
+local.db
+local.db-shm
+local.db-wal
+
 # OS
 .DS_Store
 Thumbs.db
