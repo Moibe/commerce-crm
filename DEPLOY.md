@@ -47,6 +47,21 @@ Push a `main` de `nx-routes` → su Action recarga nginx en el droplet.
 
 ---
 
+## Admin (admin.targetvox.com)
+
+Sección de administración protegida por login, en el subdominio `admin.targetvox.com`
+(mismo app commerce-crm; `hooks.server.ts` detecta el host y manda la raíz a `/admin`).
+Mecanismo idéntico a quiniela: contraseña en `ADMIN_PASSWORD`, comparación timing-safe de
+hashes SHA256, cookie `admin` httpOnly + sameSite=strict + secure (30 días). Login en
+`/acceso` (solo en el subdominio; el apex lo devuelve 404). Rutas: `/admin` (sección, en
+blanco por ahora) y `/acceso` (login/logout).
+
+Requisitos en el droplet para el admin:
+1. **`.env`** en `~/code/commerce-crm/.env` con `ADMIN_PASSWORD=<fuerte>` (el Action hace `source`).
+2. **Cert SSL** del subdominio: `sudo certbot certonly --nginx -d admin.targetvox.com`.
+3. **DNS**: A record `admin.targetvox.com` → 165.22.53.200 (creado en DO vía doctl).
+4. **nginx**: bloque `admin.targetvox.com` en `nx-routes/targetvox.com` (push tras tener el cert).
+
 ## Verificación final
 
 ```bash
