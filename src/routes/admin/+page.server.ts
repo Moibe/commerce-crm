@@ -82,5 +82,14 @@ export const actions: Actions = {
 		});
 
 		return { success: true, nombre };
+	},
+
+	eliminar: async ({ request, locals }) => {
+		if (!locals.isAdmin) return fail(403, { error: 'Solo el admin.' });
+		const id = parseInt(String((await request.formData()).get('id') ?? ''), 10);
+		if (!Number.isFinite(id)) return fail(400, { error: 'ID inválido.' });
+		// El FK cascade borra también sus piezas e imágenes.
+		db.delete(productos).where(eq(productos.id, id)).run();
+		return { eliminado: true };
 	}
 };

@@ -97,7 +97,21 @@
 					<li class="prod">
 						<div class="prod-top">
 							<strong>{p.nombre}</strong>
-							<span class="precio">{precioFmt(p.precio)}</span>
+							<div class="prod-actions">
+								<span class="precio">{precioFmt(p.precio)}</span>
+								<form method="POST" action="?/eliminar" use:enhance class="del">
+									<input type="hidden" name="id" value={p.id} />
+									<button
+										type="submit"
+										class="del-btn"
+										title="Eliminar"
+										aria-label={`Eliminar ${p.nombre}`}
+										onclick={(e) => {
+											if (!confirm(`¿Eliminar "${p.nombre}"?`)) e.preventDefault();
+										}}>✕</button
+									>
+								</form>
+							</div>
 						</div>
 						{#if p.descripcion}<p class="desc">{p.descripcion}</p>{/if}
 						<div class="variantes">
@@ -298,6 +312,30 @@
 		align-items: baseline;
 		justify-content: space-between;
 		gap: 1rem;
+	}
+	.prod-actions {
+		display: flex;
+		align-items: center;
+		gap: 0.6rem;
+	}
+	.del {
+		display: flex;
+	}
+	.del-btn {
+		font: inherit;
+		line-height: 1;
+		cursor: pointer;
+		padding: 0.2rem 0.45rem;
+		color: rgba(45, 50, 119, 0.5);
+		background: transparent;
+		border: 1px solid rgba(45, 50, 119, 0.18);
+		border-radius: 7px;
+		transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+	}
+	.del-btn:hover {
+		color: #b91c1c;
+		border-color: rgba(185, 28, 28, 0.4);
+		background: rgba(185, 28, 28, 0.06);
 	}
 	.precio {
 		font-weight: 700;
