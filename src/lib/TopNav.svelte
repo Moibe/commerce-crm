@@ -25,7 +25,31 @@
   style="transform: perspective(900px) rotateX({tiltX}deg) rotateY({tiltY}deg);"
   onmousemove={handleMove}
   onmouseleave={handleLeave}
-></header>
+>
+  <a
+    class="admin-link"
+    href="https://admin.targetvox.com/"
+    aria-label="Administración"
+    title="Administración"
+  >
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path
+        d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"
+      />
+      <circle cx="12" cy="12" r="3" />
+    </svg>
+  </a>
+</header>
 
 <style>
   .topnav {
@@ -50,5 +74,28 @@
     will-change: transform;
     user-select: none;
     z-index: 9;
+  }
+
+  /* Ícono de administración, alineado a la derecha del navbar. */
+  .admin-link {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    color: var(--ml-ink, #2d3277);
+    border: 1px solid transparent;
+    transition: background 0.18s ease, border-color 0.18s ease;
+  }
+
+  .admin-link:hover {
+    background: rgba(45, 50, 119, 0.08);
+    border-color: rgba(45, 50, 119, 0.2);
+  }
+
+  .admin-link:active {
+    background: rgba(45, 50, 119, 0.14);
   }
 </style>
