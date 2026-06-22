@@ -39,6 +39,20 @@ export const piezas = sqliteTable(
 	(t) => [unique('pieza_unica').on(t.productoId, t.tallaId)]
 );
 
+// Imágenes del producto (varias por producto; orden 0 = portada). La URL apunta al
+// archivo donde se almacene (filesystem del droplet / DO Spaces / S3); la DB solo
+// guarda la referencia, no los bytes.
+export const imagenes = sqliteTable('imagenes', {
+	id: integer('id').primaryKey({ autoIncrement: true }),
+	productoId: integer('producto_id')
+		.notNull()
+		.references(() => productos.id, { onDelete: 'cascade' }),
+	url: text('url').notNull(),
+	alt: text('alt'),
+	orden: integer('orden').notNull().default(0)
+});
+
 export type Producto = typeof productos.$inferSelect;
 export type Talla = typeof tallas.$inferSelect;
 export type Pieza = typeof piezas.$inferSelect;
+export type Imagen = typeof imagenes.$inferSelect;
