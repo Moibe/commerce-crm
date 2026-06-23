@@ -1,15 +1,22 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import type { PageData, ActionData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
 
-	let nombre = $state(data.producto.nombre);
-	let descripcion = $state(data.producto.descripcion ?? '');
-	let precio = $state<number | null>(data.producto.precio != null ? data.producto.precio / 100 : null);
+	// Snapshot de los valores iniciales (solo para sembrar el form; luego son editables).
+	const init = untrack(() => ({
+		nombre: data.producto.nombre,
+		descripcion: data.producto.descripcion ?? '',
+		precio: data.producto.precio,
+		variantes: data.variantes.map((v) => ({ talla: v.talla, cantidad: v.cantidad as number | null }))
+	}));
+
+	let nombre = $state(init.nombre);
+	let descripcion = $state(init.descripcion);
+	let precio = $state<number | null>(init.precio != null ? init.precio / 100 : null);
 	let filas = $state<{ talla: string; cantidad: number | null }[]>(
-		data.variantes.length
-			? data.variantes.map((v) => ({ talla: v.talla, cantidad: v.cantidad }))
-			: [{ talla: '', cantidad: null }]
+		init.variantes.length ? init.variantes : [{ talla: '', cantidad: null }]
 	);
 
 	function agregarFila() {
