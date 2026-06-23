@@ -99,6 +99,7 @@
 							<strong>{p.nombre}</strong>
 							<div class="prod-actions">
 								<span class="precio">{precioFmt(p.precio)}</span>
+								<a class="edit-btn" href="/admin/{p.id}" title="Editar" aria-label={`Editar ${p.nombre}`}>✎</a>
 								<form method="POST" action="?/eliminar" use:enhance class="del">
 									<input type="hidden" name="id" value={p.id} />
 									<button
@@ -321,6 +322,7 @@
 	.del {
 		display: flex;
 	}
+	.edit-btn,
 	.del-btn {
 		font: inherit;
 		line-height: 1;
@@ -330,7 +332,15 @@
 		background: transparent;
 		border: 1px solid rgba(45, 50, 119, 0.18);
 		border-radius: 7px;
+		text-decoration: none;
+		display: inline-flex;
+		align-items: center;
 		transition: color 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+	}
+	.edit-btn:hover {
+		color: var(--ml-ink, #2d3277);
+		border-color: rgba(45, 50, 119, 0.4);
+		background: rgba(45, 50, 119, 0.06);
 	}
 	.del-btn:hover {
 		color: #b91c1c;
