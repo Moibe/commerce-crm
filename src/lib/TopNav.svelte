@@ -1,8 +1,16 @@
 <script lang="ts">
-  // Barra superior "de vidrio" con tilt 3D al pasar el mouse (parallax). Vacía
-  // por ahora; aquí irán la marca + la navegación cuando armes la app.
+  // Barra superior "de vidrio" con tilt 3D al pasar el mouse (parallax).
+  // Íconos: Home (izquierda), Carrito y Admin (derecha).
+  import { cart } from '$lib/cart.svelte';
+
   let tiltX = $state(0);
   let tiltY = $state(0);
+
+  // Evita parpadeo de hidratación del contador (el carrito vive en localStorage).
+  let mounted = $state(false);
+  $effect(() => {
+    mounted = true;
+  });
 
   function handleMove(e: MouseEvent) {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
@@ -43,6 +51,25 @@
     </svg>
   </a>
 
+  <button type="button" class="nav-icon cart-btn" onclick={() => cart.toggle()} aria-label="Carrito" title="Carrito">
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+      <path d="M3 6h18" />
+      <path d="M16 10a4 4 0 0 1-8 0" />
+    </svg>
+    {#if mounted && cart.count > 0}<span class="badge">{cart.count}</span>{/if}
+  </button>
+
   <a
     class="nav-icon admin-link"
     href="https://admin.targetvox.com/"
@@ -79,6 +106,7 @@
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    gap: 0.4rem;
     background: rgba(255, 255, 255, 0.45);
     backdrop-filter: blur(10px) saturate(120%);
     -webkit-backdrop-filter: blur(10px) saturate(120%);
@@ -93,16 +121,20 @@
     z-index: 9;
   }
 
-  /* Íconos del navbar (Home a la izquierda, Admin a la derecha). */
+  /* Íconos del navbar (Home a la izquierda; Carrito y Admin a la derecha). */
   .nav-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 38px;
     height: 38px;
+    padding: 0;
     border-radius: 9px;
     color: var(--ml-ink, #2d3277);
+    background: transparent;
     border: 1px solid transparent;
+    cursor: pointer;
+    font: inherit;
     transition: background 0.18s ease, border-color 0.18s ease;
   }
 
@@ -115,8 +147,29 @@
     background: rgba(45, 50, 119, 0.14);
   }
 
-  /* Empuja el ícono de admin al extremo derecho del navbar. */
-  .admin-link {
+  /* El carrito inicia el grupo derecho; el admin queda al final. */
+  .cart-btn {
     margin-left: auto;
+    position: relative;
+  }
+
+  .badge {
+    position: absolute;
+    top: 1px;
+    right: 1px;
+    min-width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    box-sizing: border-box;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.62rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    background: var(--ml-ink, #2d3277);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    border-radius: 999px;
   }
 </style>

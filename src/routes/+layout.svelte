@@ -2,6 +2,7 @@
   import favicon from '$lib/assets/favicon.svg';
   import Sidebar from '$lib/Sidebar.svelte';
   import TopNav from '$lib/TopNav.svelte';
+  import CartDrawer from '$lib/CartDrawer.svelte';
 
   let { children } = $props();
   let collapsed = $state(false);
@@ -34,6 +35,8 @@
     {@render children()}
   </div>
 </main>
+
+<CartDrawer />
 
 <style>
   :global(:root) {
